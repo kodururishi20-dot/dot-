@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess The Number - RISHIKESH K</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+    color: white;
+    text-align: center;
+}
+
+.screen {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.active {
+    display: flex;
+    animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: scale(0.9);}
+    to {opacity:1; transform: scale(1);}
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: #00adb5;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #00979c;
+}
+
+input {
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#insta {
+    position: absolute;
+    bottom: 15px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+#gameBox {
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.hint {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #00ffcc;
+}
+</style>
+</head>
+
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+    <h1>RISHIKESH K</h1>
+    <button onclick="startGame()">Start Game</button>
+
+    <div id="insta">📷 RISHIKESH_._9</div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="screen">
+    <div id="gameBox">
+        <h2>Guess the Number (1 - 100)</h2>
+
+        <input type="number" id="guessInput" placeholder="Enter guess">
+        <br><br>
+
+        <button onclick="checkGuess()">Guess</button>
+        <button onclick="exitGame()">Exit</button>
+
+        <div class="hint" id="hintText"></div>
+        <div class="hint" id="aiPredict"></div>
+    </div>
+</div>
+
+<!-- EXIT SCREEN -->
+<div id="exitScreen" class="screen">
+    <h1>Thank You ❤️</h1>
+    <p>Regards Rishi</p>
+</div>
+
+<!-- SOUND EFFECTS -->
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+<audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+<script>
+let number = Math.floor(Math.random() * 100) + 1;
+let low = 1;
+let high = 100;
+
+function playClick() {
+    document.getElementById("clickSound").play();
+}
+
+function startGame() {
+    playClick();
+    document.getElementById("startScreen").classList.remove("active");
+    document.getElementById("gameScreen").classList.add("active");
+}
+
+function checkGuess() {
+    playClick();
+
+    let guess = Number(document.getElementById("guessInput").value);
+    let hint = document.getElementById("hintText");
+    let ai = document.getElementById("aiPredict");
+
+    if (!guess) return;
+
+    // Smart Hint
+    if (guess > number) {
+        hint.innerText = "Too high 📉";
+        high = guess - 1;
+    } else if (guess < number) {
+        hint.innerText = "Too low 📈";
+        low = guess + 1;
+    } else {
+        hint.innerText = "🎉 Correct! You won!";
+        document.getElementById("winSound").play();
+        ai.innerText = "";
+        return;
+    }
+
+    // AI Binary Search Prediction
+    let aiGuess = Math.floor((low + high) / 2);
+    ai.innerText = "🤖 AI suggests: " + aiGuess;
+
+    // AI Pattern Prediction (your next move)
+    if (guess > number) {
+        ai.innerText += " (Try lower)";
+    } else {
+        ai.innerText += " (Try higher)";
+    }
+}
+
+function exitGame() {
+    playClick();
+    document.getElementById("gameScreen").classList.remove("active");
+    document.getElementById("exitScreen").classList.add("active");
+}
+</script>
+
+</body>
+</html>
